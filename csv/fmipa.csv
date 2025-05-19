@@ -1,0 +1,52 @@
+course_id,name,course_code,credits,class,quota,instructor,faculty,time_slot,duration,day,time,room_id,room
+1,Matematika IIA,MA1201-1600101,4,1,100,Hendra Gunawan,FMIPA,A132,2,Senin,13:00 - 15:00,26,9108
+2,Matematika IIA,MA1201-1600102,4,1,100,Hendra Gunawan,FMIPA,C092,2,Rabu,09:00 - 11:00,20,TVST A
+3,Matematika IIA,MA1201-1600201,4,2,100,Johan Matheus Tuwankotta,FMIPA,A132,2,Senin,13:00 - 15:00,31,9123
+4,Matematika IIA,MA1201-1600202,4,2,100,Johan Matheus Tuwankotta,FMIPA,D132,2,Kamis,13:00 - 15:00,1,9009
+5,Matematika IIA,MA1201-1600301,4,3,100,Marcus Wono Setya Budhi,FMIPA,A132,2,Senin,13:00 - 15:00,36,9128
+6,Matematika IIA,MA1201-1600302,4,3,100,Marcus Wono Setya Budhi,FMIPA,C092,2,Rabu,09:00 - 11:00,22,TVST C
+7,Matematika IIA,MA1201-1600401,4,4,100,Pudji Astuti Waluyo,FMIPA,A132,2,Senin,13:00 - 15:00,42,9136
+8,Matematika IIA,MA1201-1600402,4,4,100,Pudji Astuti Waluyo,FMIPA,C092,2,Rabu,09:00 - 11:00,30,9122
+9,Matematika IIA,MA1201-1600501,4,5,100,Rinovia Mery Garnierita S.,FMIPA,A132,2,Senin,13:00 - 15:00,43,9137
+10,Matematika IIA,MA1201-1600502,4,5,100,Rinovia Mery Garnierita S.,FMIPA,C092,2,Rabu,09:00 - 11:00,18,9023
+11,Matematika IIA,MA1201-1600601,4,6,100,Saladin Uttunggadewa,FMIPA,A132,2,Senin,13:00 - 15:00,78,9401
+12,Matematika IIA,MA1201-1600602,4,6,100,Saladin Uttunggadewa,FMIPA,C092,2,Rabu,09:00 - 11:00,40,9134
+13,Fisika IIA,FI1201-1600101,4,1,100,Ferry Iskandar,FMIPA,A072,2,Senin,07.00 - 09.00,20,TVST A
+14,Fisika IIA,FI1201-1600102,4,1,100,Ferry Iskandar,FMIPA,C072,2,Rabu,07.00 - 09.00,20,TVST A
+15,Fisika IIA,FI1201-1600201,4,2,100,Fiki Taufik Akbar Sobar,FMIPA,A072,2,Senin,07.00 - 09.00,21,TVST B
+16,Fisika IIA,FI1201-1600202,4,2,100,Fiki Taufik Akbar Sobar,FMIPA,C072,2,Rabu,07.00 - 09.00,21,TVST B
+17,Fisika IIA,FI1201-1600301,4,3,100,Triyanta,FMIPA,A072,2,Senin,07.00 - 09.00,22,TVST C
+18,Fisika IIA,FI1201-1600302,4,3,100,Triyanta,FMIPA,C072,2,Rabu,07.00 - 09.00,22,TVST C
+19,Fisika IIA,FI1201-1600401,4,4,100,Siti Nurul Khotimah,FMIPA,A072,2,Senin,07.00 - 09.00,17,9022
+20,Fisika IIA,FI1201-1600402,4,4,100,Siti Nurul Khotimah,FMIPA,C072,2,Rabu,07.00 - 09.00,17,9022
+21,Fisika IIA,FI1201-1600501,4,5,100,Pepen Arifin,FMIPA,A072,2,Senin,07.00 - 09.00,18,9023
+22,Fisika IIA,FI1201-1600502,4,5,100,Pepen Arifin,FMIPA,C072,2,Rabu,07.00 - 09.00,18,9023
+23,Fisika IIA,FI1201-1600601,4,6,100,Umar Fauzi,FMIPA,A072,2,Senin,07.00 - 09.00,45,9211
+24,Fisika IIA,FI1201-1600602,4,6,100,Umar Fauzi,FMIPA,C072,2,Rabu,07.00 - 09.00,45,9211
+25,Kimia IIA,KI1201-1600101,3,1,100,Deana Wahyuningrum,FMIPA,A092,2,Senin,09.00 - 11.00,36,9128
+26,Kimia IIA,KI1201-1600102,3,1,100,Deana Wahyuningrum,FMIPA,D071,1,Kamis,07.00 - 08.00,26,9108
+27,Kimia IIA,KI1201-1600201,3,2,100,Ria Sri Rahayu,FMIPA,A092,2,Senin,09.00 - 11.00,21,TVST B
+28,Kimia IIA,KI1201-1600202,3,2,100,Ria Sri Rahayu,FMIPA,D071,1,Kamis,07.00 - 08.00,25,9107
+29,Kimia IIA,KI1201-1600301,3,3,100,Ihsanawati,FMIPA,A092,2,Senin,09.00 - 11.00,22,TVST C
+30,Kimia IIA,KI1201-1600302,3,3,100,Ihsanawati,FMIPA,D071,1,Kamis,07.00 - 08.00,41,9135
+31,Kimia IIA,KI1201-1600401,3,4,100,Bambang Prijamboedi,FMIPA,A092,2,Senin,09.00 - 11.00,17,9022
+32,Kimia IIA,KI1201-1600402,3,4,100,Bambang Prijamboedi,FMIPA,D071,1,Kamis,07.00 - 08.00,42,9136
+33,Kimia IIA,KI1201-1600501,3,5,100,Indra Noviandri,FMIPA,A092,2,Senin,09.00 - 11.00,18,9023
+34,Kimia IIA,KI1201-1600502,3,5,100,Indra Noviandri,FMIPA,D071,1,Kamis,07.00 - 08.00,18,9023
+35,Kimia IIA,KI1201-1600601,3,6,100,Aep Patah,FMIPA,A092,2,Senin,09.00 - 11.00,82,9405
+36,Kimia IIA,KI1201-1600602,3,6,100,Aep Patah,FMIPA,D071,1,Kamis,07.00 - 08.00,46,9212
+37,Pengantar Rekayasa dan Desain,KU1202-1600101,3,1,100,Muhammad Ali Zulfikar,FMIPA,C151,1,Rabu,15.00 - 16.00,35,9127
+38,Pengantar Rekayasa dan Desain,KU1202-1600102,3,1,100,Muhammad Ali Zulfikar,FMIPA,D152,2,Kamis,15.00 - 17.00,34,9126
+39,Pengantar Rekayasa dan Desain,KU1202-1600201,3,2,100,Muhammad Miftahul Munir,FMIPA,C151,1,Rabu,15.00 - 16.00,31,9123
+40,Pengantar Rekayasa dan Desain,KU1202-1600202,3,2,100,Muhammad Miftahul Munir,FMIPA,D152,2,Kamis,15.00 - 17.00,35,9127
+41,Pengantar Rekayasa dan Desain,KU1202-1600301,3,3,100,Sidik Permana,FMIPA,C151,1,Rabu,15.00 - 16.00,33,9125
+42,Pengantar Rekayasa dan Desain,KU1202-1600302,3,3,100,Sidik Permana,FMIPA,D152,2,Kamis,15.00 - 17.00,19,9024
+43,Pengantar Rekayasa dan Desain,KU1202-1600401,3,4,100,Gunawan Handayani,FMIPA,C151,1,Rabu,15.00 - 16.00,36,9128
+44,Pengantar Rekayasa dan Desain,KU1202-1600402,3,4,100,Gunawan Handayani,FMIPA,D152,2,Kamis,15.00 - 17.00,36,9128
+45,Pengantar Rekayasa dan Desain,KU1202-1600501,3,5,100,Asril Pramutadi Andi Mustari,FMIPA,C151,1,Rabu,15.00 - 16.00,26,9108
+46,Pengantar Rekayasa dan Desain,KU1202-1600502,3,5,100,Asril Pramutadi Andi Mustari,FMIPA,D152,2,Kamis,15.00 - 17.00,37,9131
+47,Bahasa Inggris,KU1024-1600101,2,1,100,Lusia Marliana Nurani,FMIPA,D092,2,Kamis,09.00 - 11.00,45,9211
+48,Bahasa Inggris,KU1024-1600201,2,2,100,Bambang Supriyanto,FMIPA,D092,2,Kamis,09.00 - 11.00,8,9016
+49,Bahasa Inggris,KU1024-1600301,2,3,100,Anuncius Gumawang Jati,FMIPA,D092,2,Kamis,09.00 - 11.00,9,9017
+50,Bahasa Inggris,KU1024-1600401,2,4,100,Dana Waskita,FMIPA,D092,2,Kamis,09.00 - 11.00,18,9023
+51,Bahasa Inggris,KU1024-1600501,2,5,100,Ayi Rohayati,FMIPA,D092,2,Kamis,09.00 - 11.00,26,9108
