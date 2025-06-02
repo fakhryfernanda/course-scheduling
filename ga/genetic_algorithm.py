@@ -1,12 +1,37 @@
-class GeneticAlgorithm:
-    def __init__(self, population_size, mutation_rate, crossover_rate, elitism_rate):
-        self.population_size = population_size
-        self.mutation_rate = mutation_rate
-        self.crossover_rate = crossover_rate
-        self.elitism_rate = elitism_rate
+from dataclasses import dataclass
+from typing import List
+from ga.genome import Genome
+from dataframes.curriculum import Curriculum
+from dataframes.course import Course
+from utils import io
 
-    def init(self):
-        pass
+@dataclass
+class ProblemContext:
+    curriculum: Curriculum
+    courses: Course
+    time_slot_indices: List[int]
+    room_indices: List[int]
+
+class GeneticAlgorithm:
+    def __init__(self, context: ProblemContext, population_size: int):
+        self.context = context
+        self.population_size = population_size
+        self.population: List[Genome] = []
+
+    def initialize_population(self):
+        self.population = [
+            Genome.from_generator(
+                self.context.curriculum,
+                self.context.courses,
+                self.context.time_slot_indices,
+                self.context.room_indices
+            ).chromosome
+            for _ in range(self.population_size)
+        ]
+
+    def export_population(self):
+        for i, chromosome in enumerate(self.population):
+            io.export_to_txt(chromosome, "solutions", f"solution_{i+1}.txt")
 
     def eval(self):
         pass
