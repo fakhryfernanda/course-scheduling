@@ -46,7 +46,7 @@ def generate_valid_guess(curriculum: Curriculum, course: Course, time_slot_indic
 
     return arr_2d
 
-def place_parallel_classes(arr_2d: np.array, T: int, R: int, class_dict: dict, code: tuple):
+def place_parallel_classes(arr_2d: np.ndarray, T: int, R: int, class_dict: dict, code: tuple):
     """
     Places parallel classes with a given duration. Each key in class_dict
     represents a group (e.g., curriculum) that must be scheduled in the

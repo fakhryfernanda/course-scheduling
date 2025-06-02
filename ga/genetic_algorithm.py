@@ -4,6 +4,7 @@ from ga.genome import Genome
 from dataframes.curriculum import Curriculum
 from dataframes.course import Course
 from utils import io
+import numpy as np
 
 @dataclass
 class ProblemContext:
@@ -25,16 +26,19 @@ class GeneticAlgorithm:
                 self.context.courses,
                 self.context.time_slot_indices,
                 self.context.room_indices
-            ).chromosome
+            )
             for _ in range(self.population_size)
         ]
 
     def export_population(self):
-        for i, chromosome in enumerate(self.population):
-            io.export_to_txt(chromosome, "solutions", f"solution_{i+1}.txt")
+        for i, genome in enumerate(self.population):
+            io.export_to_txt(genome.chromosome, "solutions", f"solution_{i+1}.txt")
 
     def eval(self):
-        pass
+        return [
+            genome.count_used_rooms()
+            for genome in self.population
+        ]
 
     def select(self):
         pass

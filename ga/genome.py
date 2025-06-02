@@ -12,6 +12,9 @@ class Genome:
     def from_generator(cls, curriculum: Curriculum, course: Course, time_slot_indices: List, room_indices: List):
         guess = generator.generate_valid_guess(curriculum, course, time_slot_indices, room_indices)
         return cls(guess)
+    
+    def count_used_rooms(self) -> int:
+        return np.count_nonzero(self.chromosome.any(axis=0))
 
     def decode(self) -> np.ndarray:
         return self.chromosome.copy()

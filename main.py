@@ -25,11 +25,12 @@ if __name__ == '__main__':
         curriculum=curriculum,
         courses=courses,
         time_slot_indices=list(range(30)),
-        room_indices=list(range(12))
+        room_indices=list(range(24))
     )
 
     ga = GeneticAlgorithm(context=context, population_size=10)
     ga.initialize_population()
 
     ga.export_population()
+    print(ga.eval())
 
