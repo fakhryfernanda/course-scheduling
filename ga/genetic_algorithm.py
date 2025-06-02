@@ -39,6 +39,12 @@ class GeneticAlgorithm:
             genome.count_used_rooms()
             for genome in self.population
         ]
+    
+    def validate(self):
+        return [
+            genome.check_constraint()
+            for genome in self.population
+        ]
 
     def select(self):
         pass

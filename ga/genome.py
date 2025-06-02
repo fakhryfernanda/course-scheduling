@@ -1,5 +1,6 @@
 import numpy as np
 from ga import generator
+from ga.constraint_checker import ConstraintChecker
 from dataframes.curriculum import Curriculum
 from dataframes.course import Course
 from typing import List
@@ -15,6 +16,9 @@ class Genome:
     
     def count_used_rooms(self) -> int:
         return np.count_nonzero(self.chromosome.any(axis=0))
+    
+    def check_constraint(self) -> bool:
+        return ConstraintChecker(self.chromosome).validate()
 
     def decode(self) -> np.ndarray:
         return self.chromosome.copy()

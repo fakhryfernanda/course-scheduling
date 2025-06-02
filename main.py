@@ -33,4 +33,6 @@ if __name__ == '__main__':
 
     ga.export_population()
     print(ga.eval())
+    print()
+    print(ga.validate())
 
