@@ -25,6 +25,3 @@ class Genome:
 
     def mutate(self):
         pass
-
-    def crossover(self, other: "Genome") -> "Genome":
-        pass
