@@ -5,7 +5,6 @@ from ga.crossover_operator import CrossoverOperator
 from dataframes.curriculum import Curriculum
 from dataframes.course import Course
 from utils import io
-from collections import Counter
 import numpy as np
 
 @dataclass
@@ -51,8 +50,8 @@ class GeneticAlgorithm:
     def select(self):
         pass
 
-    def crossover(self, method: str, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
-        crossover_operator = CrossoverOperator(method=method)
+    def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
+        crossover_operator = CrossoverOperator(method="random_slice")
         return crossover_operator.run([parent1, parent2])
 
     def mutate(self):
