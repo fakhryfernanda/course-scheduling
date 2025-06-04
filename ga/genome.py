@@ -3,7 +3,6 @@ import numpy as np
 from ga import generator
 from ga.constraint_checker import ConstraintChecker
 from dataframes.curriculum import Curriculum
-from dataframes.course import Course
 from typing import List
 
 class Genome:
@@ -23,8 +22,8 @@ class Genome:
         
         return count 
     
-    def check_constraint(self) -> bool:
-        return ConstraintChecker(self.chromosome).validate()
+    def check_constraint(self, verbose: bool = False) -> bool:
+        return ConstraintChecker(self.chromosome, verbose=verbose).validate()
 
     def decode(self) -> np.ndarray:
         return self.chromosome.copy()
