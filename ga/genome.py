@@ -16,16 +16,18 @@ class Genome:
         return cls(guess)
     
     def count_used_rooms(self) -> int:
-        return np.count_nonzero(self.chromosome.any(axis=0))
+        if self.check_constraint():
+            count = np.count_nonzero(self.chromosome.any(axis=0))
+        else:
+            count = 1000
+        
+        return count 
     
     def check_constraint(self) -> bool:
         return ConstraintChecker(self.chromosome).validate()
 
     def decode(self) -> np.ndarray:
         return self.chromosome.copy()
-
-    def mutate(self):
-        pass
 
     def mutate(self, attempts: int = 5) -> None:
         T, R = self.chromosome.shape
@@ -82,8 +84,8 @@ class Genome:
                     mutated[t1, r1], mutated[t2, r2] = val2, val1
                     mutated[t1_pair, r1], mutated[t2_pair, r2] = val2, val1
                     count += 1
-                    print("Swapped index:")
-                    print((t1, r1), (t2, r2))
+                    print("Swapped value:")
+                    print((int(val1), int(val2)))
                     break
                 else:
                     if (t1, r1) == (t2, r2):
@@ -91,8 +93,8 @@ class Genome:
 
                     mutated[t1, r1], mutated[t2, r2] = val2, val1
                     count += 1
-                    print("Swapped index:")
-                    print((t1, r1), (t2, r2))
+                    print("Swapped value:")
+                    print((int(val1), int(val2)))
                     break
 
         self.chromosome = mutated

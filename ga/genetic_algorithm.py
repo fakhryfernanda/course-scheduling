@@ -1,10 +1,11 @@
+import numpy as np
 from dataclasses import dataclass
 from typing import List
 from ga.genome import Genome
 from ga.crossover_operator import CrossoverOperator
+from ga.select_parent import SelectParent
 from dataframes.curriculum import Curriculum
 from utils import io
-import numpy as np
 
 @dataclass
 class ProblemContext:
@@ -44,8 +45,8 @@ class GeneticAlgorithm:
             for genome in self.population
         ]
 
-    def select(self):
-        pass
+    def select(self, method: str) -> List[Genome]:
+        return SelectParent(method=method).run(self.population)
 
     def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
         crossover_operator = CrossoverOperator(method="random_slice")
@@ -55,4 +56,5 @@ class GeneticAlgorithm:
         pass
 
     def run(self):
-        pass
+        selected = self.select(method="tournament")
+        return selected
