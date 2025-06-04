@@ -12,7 +12,7 @@ class MutationOperator:
         else:
             raise ValueError(f"Unsupported mutation method: {self.method}")
         
-    def random_swap(self, chromosome, attempts: int = 1, slots_per_day: int = 10) -> None:
+    def random_swap(self, chromosome, attempts: int = 5, slots_per_day: int = 10) -> None:
         T, R = chromosome.shape
         mutated = chromosome.copy()
 
@@ -34,7 +34,7 @@ class MutationOperator:
                 return False
 
             (t2, r2) = twin_location
-            return t1 // 10 == t2 // 10
+            return t1 // slots_per_day == t2 // slots_per_day
                 
         valid_2h_time_indices = [t for t in range(T - 1) if (t % 10) <= 8]
         count = 0
