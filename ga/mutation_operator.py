@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from utils.lookup import locate_value, locate_twin
 
 class MutationOperator:
     def __init__(self, method: str = "random_swap"):
@@ -11,7 +12,7 @@ class MutationOperator:
         else:
             raise ValueError(f"Unsupported mutation method: {self.method}")
         
-    def random_swap_old(self, chromosome, attempts: int = 5, slots_per_day: int = 10) -> None:
+    def random_swap(self, chromosome, attempts: int = 1, slots_per_day: int = 10) -> None:
         T, R = chromosome.shape
         mutated = chromosome.copy()
 
@@ -22,9 +23,19 @@ class MutationOperator:
                 return t + 1
             return None
         
-        def is_same_day(t1, t2):
-            return t1 // slots_per_day == t2 // slots_per_day
+        def is_same_day(val, new_location):
+            if val == 0:
+                return False
 
+            (t1, r1) = new_location
+            twin_location = locate_twin(chromosome, val)
+
+            if twin_location is None:
+                return False
+
+            (t2, r2) = twin_location
+            return t1 // 10 == t2 // 10
+                
         valid_2h_time_indices = [t for t in range(T - 1) if (t % 10) <= 8]
         count = 0
 
@@ -41,11 +52,14 @@ class MutationOperator:
                 valid = False
 
                 t2 = random.choice(valid_2h_time_indices) if is_2h_course else random.randint(0, T - 1)
-                if is_same_day(t1, t2):
-                    continue
-
                 r2 = random.randint(0, R - 1)
                 val2 = mutated[t2, r2]
+
+                if is_same_day(val1, (t2, r2)):
+                    continue
+
+                if is_same_day(val2, (t1, r1)):
+                    continue
 
                 if is_2h_course:
                     t2_pair = get_two_hour_pair(t2, r2, val2) if val2 != 0 else None
