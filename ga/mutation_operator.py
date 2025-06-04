@@ -45,10 +45,7 @@ class MutationOperator:
                     # Check if t2 and t2_pair are valid for swap
                     valid = False
                     if val2 == 0:
-                        if t2 > 0 and mutated[t2 - 1, r2] == 0:
-                            t2_pair = t2 - 1
-                            valid = True
-                        elif t2 < T - 1 and mutated[t2 + 1, r2] == 0:
+                        if t2 < T - 1 and mutated[t2 + 1, r2] == 0:
                             t2_pair = t2 + 1
                             valid = True
                     elif t2_pair is not None and mutated[t2_pair, r2] == val2:
