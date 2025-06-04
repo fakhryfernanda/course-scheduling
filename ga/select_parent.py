@@ -15,7 +15,7 @@ class SelectParent:
     def _tournament_selection(self, population: List[Genome]) -> List[Genome]:
         selected = []
         while len(selected) < len(population):
-            competitors = random.sample(population, self.k)
+            competitors = random.sample(population, 2)
             winner = min(competitors, key=lambda g: g.count_used_rooms())
             selected.append(winner)
         return selected

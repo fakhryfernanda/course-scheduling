@@ -62,24 +62,24 @@ class CrossoverOperator:
         start_idx = start_col * T
         replace_indices = list(range(start_idx, start_idx + half_len))
 
-        def single_crossover(source, donor):
-            child = list(source)
-            available = Counter(source)
+        def single_crossover(p1, p2):
+            child = list(p1)
+            available = Counter(p1)
 
             for idx in replace_indices:
                 available[child[idx]] -= 1
 
-            donor_iter = iter(donor)
+            p2_iter = iter(p2)
             modified = 0
-            ptr = start_idx
+            pointer = start_idx
 
             while modified < half_len:
-                gene = next(donor_iter)
+                gene = next(p2_iter)
                 if available[gene] > 0:
-                    child[ptr] = gene
+                    child[pointer] = gene
                     available[gene] -= 1
                     modified += 1
-                    ptr += 1
+                    pointer += 1
 
             return np.array(child).reshape((T, R), order='F')
 
