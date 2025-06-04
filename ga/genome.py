@@ -11,8 +11,8 @@ class Genome:
         self.chromosome = chromosome
 
     @classmethod
-    def from_generator(cls, curriculum: Curriculum, course: Course, time_slot_indices: List, room_indices: List):
-        guess = generator.generate_valid_guess(curriculum, course, time_slot_indices, room_indices)
+    def from_generator(cls, curriculum: Curriculum, time_slot_indices: List, room_indices: List):
+        guess = generator.generate_valid_guess(curriculum, time_slot_indices, room_indices)
         return cls(guess)
     
     def count_used_rooms(self) -> int:

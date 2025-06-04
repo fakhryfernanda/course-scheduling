@@ -2,7 +2,6 @@ from utils import io
 
 from dataframes.curriculum import Curriculum
 from dataframes.subject import Subject
-from dataframes.course import Course
 from dataframes.time_slot import TimeSlot
 from dataframes.room import Room
 
@@ -11,8 +10,7 @@ from ga.genetic_algorithm import GeneticAlgorithm, ProblemContext
 
 if __name__ == '__main__':
     subjects = Subject("csv/subjects.csv")
-    courses = Course("csv/fmipa.csv")
-    curriculum = Curriculum("csv/curriculum.csv", subjects.df, courses.df)
+    curriculum = Curriculum("csv/curriculum.csv", subjects.df)
 
     # time_slots = TimeSlot("csv/time_slots.csv").df
     # time_slot_indices = time_slots['id'].to_list()
@@ -23,7 +21,6 @@ if __name__ == '__main__':
 
     context = ProblemContext(
         curriculum=curriculum,
-        courses=courses,
         time_slot_indices=list(range(30)),
         room_indices=list(range(24))
     )

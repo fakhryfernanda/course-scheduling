@@ -1,6 +1,6 @@
-id,faculty_id,subject_id,classes
-1,160,1,6
-2,160,2,6
-3,160,3,6
-4,160,4,5
-5,160,5,5
+id,faculty_id,subject_id,classes,session_1,session_2
+1,160,1,6,2,2
+2,160,2,6,2,2
+3,160,3,6,2,1
+4,160,4,5,2,1
+5,160,5,5,2,0

@@ -10,7 +10,6 @@ import numpy as np
 @dataclass
 class ProblemContext:
     curriculum: Curriculum
-    courses: Course
     time_slot_indices: List[int]
     room_indices: List[int]
 
@@ -24,7 +23,6 @@ class GeneticAlgorithm:
         self.population = [
             Genome.from_generator(
                 self.context.curriculum,
-                self.context.courses,
                 self.context.time_slot_indices,
                 self.context.room_indices
             )

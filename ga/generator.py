@@ -1,9 +1,8 @@
 import numpy as np
 from typing import List
 from dataframes.curriculum import Curriculum
-from dataframes.course import Course
 
-def generate_valid_guess(curriculum: Curriculum, course: Course, time_slot_indices: List, room_indices: List):
+def generate_valid_guess(curriculum: Curriculum, time_slot_indices: List, room_indices: List):
     """
     Generate a valid solution using your 1D approach with transpose.
     Parameters:
@@ -21,11 +20,10 @@ def generate_valid_guess(curriculum: Curriculum, course: Course, time_slot_indic
     room_indices = [i for i in range(R)]
     np.random.shuffle(room_indices)
 
-    durations = course.df.set_index('course_id')['duration'].to_dict()
-
+    total_durations = (curriculum.df["classes"] * (curriculum.df["session_1"] + curriculum.df["session_2"])).sum()
     total_slots = T * R
-    required_slots = sum(durations.values())
-    if required_slots > total_slots:
+    
+    if total_durations > total_slots:
         raise ValueError("Not enough slots for all courses")
 
     arr_2d = np.full((T, R), fill_value=0, dtype=np.int16)
