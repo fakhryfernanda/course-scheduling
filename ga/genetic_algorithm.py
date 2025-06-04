@@ -3,7 +3,6 @@ from typing import List
 from ga.genome import Genome
 from ga.crossover_operator import CrossoverOperator
 from dataframes.curriculum import Curriculum
-from dataframes.course import Course
 from utils import io
 import numpy as np
 
