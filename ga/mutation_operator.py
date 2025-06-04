@@ -11,7 +11,7 @@ class MutationOperator:
         else:
             raise ValueError(f"Unsupported mutation method: {self.method}")
         
-    def random_swap(self, chromosome, attempts: int = 5) -> None:
+    def random_swap_old(self, chromosome, attempts: int = 5, slots_per_day: int = 10) -> None:
         T, R = chromosome.shape
         mutated = chromosome.copy()
 
@@ -21,6 +21,9 @@ class MutationOperator:
             elif t < T - 1 and mutated[t + 1, r] == subject_id:
                 return t + 1
             return None
+        
+        def is_same_day(t1, t2):
+            return t1 // slots_per_day == t2 // slots_per_day
 
         valid_2h_time_indices = [t for t in range(T - 1) if (t % 10) <= 8]
         count = 0
@@ -35,7 +38,12 @@ class MutationOperator:
             is_2h_course = t1_pair is not None
 
             for _ in range(10):
+                valid = False
+
                 t2 = random.choice(valid_2h_time_indices) if is_2h_course else random.randint(0, T - 1)
+                if is_same_day(t1, t2):
+                    continue
+
                 r2 = random.randint(0, R - 1)
                 val2 = mutated[t2, r2]
 
@@ -43,7 +51,6 @@ class MutationOperator:
                     t2_pair = get_two_hour_pair(t2, r2, val2) if val2 != 0 else None
 
                     # Check if t2 and t2_pair are valid for swap
-                    valid = False
                     if val2 == 0:
                         if t2 < T - 1 and mutated[t2 + 1, r2] == 0:
                             t2_pair = t2 + 1
@@ -63,8 +70,6 @@ class MutationOperator:
                     mutated[t1, r1], mutated[t2, r2] = val2, val1
                     mutated[t1_pair, r1], mutated[t2_pair, r2] = val2, val1
                     count += 1
-                    print("Swapped value:")
-                    print((int(val1), int(val2)))
                     break
                 else:
                     if (t1, r1) == (t2, r2):
@@ -72,8 +77,6 @@ class MutationOperator:
 
                     mutated[t1, r1], mutated[t2, r2] = val2, val1
                     count += 1
-                    print("Swapped value:")
-                    print((int(val1), int(val2)))
                     break
 
         return mutated
