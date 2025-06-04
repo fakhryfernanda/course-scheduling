@@ -26,10 +26,5 @@ if __name__ == '__main__':
     )
 
     ga = GeneticAlgorithm(context=context, population_size=10)
-    ga.initialize_population()
-
-    ga.export_population()
-    print(ga.eval())
-    print()
-    print(ga.validate())
+    # ga.run()
 

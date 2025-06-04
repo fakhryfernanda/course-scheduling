@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from dataclasses import dataclass
 from typing import List
@@ -14,9 +15,15 @@ class ProblemContext:
     room_indices: List[int]
 
 class GeneticAlgorithm:
-    def __init__(self, context: ProblemContext, population_size: int):
+    def __init__(self, context: ProblemContext, population_size: int, max_generation: int = 10, crossover_rate: float = 0.7, mutation_rate: float = 0.1):
         self.context = context
+
+        assert population_size % 2 == 0, "Population size must be even"
         self.population_size = population_size
+        self.max_generation = max_generation
+        self.crossover_rate = crossover_rate
+        self.mutation_rate = mutation_rate
+
         self.population: List[Genome] = []
 
     def initialize_population(self):
@@ -44,9 +51,9 @@ class GeneticAlgorithm:
             genome.check_constraint()
             for genome in self.population
         ]
-
-    def select(self, method: str) -> List[Genome]:
-        return SelectParent(method=method).run(self.population)
+    
+    def select(self) -> List[Genome]:
+        return SelectParent(method="tournament").run(self.population)
 
     def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
         crossover_operator = CrossoverOperator(method="random_slice")
@@ -55,6 +62,35 @@ class GeneticAlgorithm:
     def mutate(self):
         pass
 
+    def evolve(self):
+        next_population = []
+
+        # Selection
+        parents = self.select()
+
+        # Crossover
+        for i in range(0, len(parents), 2):
+            p1 = parents[i]
+            p2 = parents[i + 1]
+            if random.random() < self.crossover_rate:
+                children_chromosomes = self.crossover(p1.chromosome, p2.chromosome)
+                next_population.extend([Genome(chromosome) for chromosome in children_chromosomes])
+            else:
+                next_population.extend([Genome(p1.chromosome), Genome(p2.chromosome)])
+
+        # Mutation
+        for genome in next_population:
+            if random.random() < self.mutation_rate:
+                genome.mutate()
+
+        self.population = next_population
+
     def run(self):
-        selected = self.select(method="tournament")
-        return selected
+        self.initialize_population()
+        print("Generation 0")
+        print(self.eval(), end="\n\n")
+
+        for gen in range(self.max_generation):
+            print(f"Generation {gen+1}")
+            self.evolve()
+            print(self.eval(), end="\n\n")
