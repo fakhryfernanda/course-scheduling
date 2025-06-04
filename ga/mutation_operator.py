@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from utils.lookup import locate_value, locate_twin
+from utils.helper import locate_twin
 
 class MutationOperator:
     def __init__(self, method: str = "random_swap"):
