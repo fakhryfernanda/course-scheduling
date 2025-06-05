@@ -2,7 +2,7 @@ import numpy as np
 
 def locate_value(arr: np.ndarray, value: int) -> tuple[int, int]:
     result = np.argwhere(arr == value)
-    return tuple(result[0]) if result.size > 0 else None
+    return tuple(int(i) for i in result[0]) if result.size > 0 else None
 
 def locate_twin(arr: np.ndarray, value: int) -> tuple[int, int]:
     session = value % 10
