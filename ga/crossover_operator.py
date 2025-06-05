@@ -1,7 +1,7 @@
 import numpy as np
 from collections import Counter
 from typing import List
-from utils.helper import locate_value
+from utils.helper import locate_value, locate_twin, safe_swap
 
 class CrossoverOperator:
     def __init__(self, method: str = "fixed_slice"):
@@ -63,7 +63,7 @@ class CrossoverOperator:
         start_idx = start_col * T
         replace_indices = list(range(start_idx, start_idx + half_len))
 
-        def check_fault(arr: np.ndarray, slots_per_day: int = 10) -> List[int]:
+        def check_class_boundary_fault(arr: np.ndarray, slots_per_day: int = 10) -> List[int]:
             T, R = arr.shape
             fault = []
 
@@ -77,8 +77,8 @@ class CrossoverOperator:
 
             return [int(f) for f in fault]
 
-        def fix_fault(arr: np.ndarray):
-            fault = check_fault(arr)
+        def fix_class_boundary_fault(arr: np.ndarray):
+            fault = check_class_boundary_fault(arr)
             if fault is None:
                 return arr
                         
@@ -86,28 +86,50 @@ class CrossoverOperator:
             for val in fault:
                 (t,r) = locate_value(arr, val)
 
-                safe = False
+
                 cols = list(range(R))
                 start = cols.index(r)
                 cols = cols[start:] + cols[:start]
                 
-                for col in cols:
-                    for row in range(T-1):
-                        if row % 10 == 9:
+                arr = safe_swap(arr, val, list(range(T-1)), cols)
+
+            return arr
+
+        def check_multiple_subject_session_fault(arr: np.ndarray, slots_per_day: int = 10):
+            T, R = arr.shape
+            num_days = T // slots_per_day
+
+            fault = []
+            for day in range(num_days):
+                start = day * slots_per_day
+                end = start + slots_per_day
+                for t in range(start, end):
+                    seen_keys = set()
+                    for r in range(R):
+                        val = arr[t, r]
+                        if val == 0:
                             continue
+                        subject_id = int(val) // 100
+                        class_number = (int(val) // 10) % 10
+                        key = (subject_id, class_number)
+                        if key in seen_keys:
+                            fault.append(int(val))
+                        seen_keys.add(key)
+            
+            return fault
+        
+        def fix_multiple_subject_session_fault(arr: np.ndarray):
+            fault = check_multiple_subject_session_fault(arr)
+            if fault is None:
+                return arr
+                                    
+            T, R = arr.shape
+            for val in fault:
+                (t,r) = locate_twin(arr, val)
+                rows = [i for i in range(T) if i // 10 != t // 10]
+                cols = list(range(R))
 
-                        if arr[row,col] == 0 and arr[row+1,col] == 0:
-                            arr[row,col] = val
-                            arr[row+1,col] = val
-                            arr[t,r] = 0
-                            arr[t+1,r] = 0
-                            safe = True
-                            break
-                    if safe:
-                        break
-
-                if not safe:
-                    raise Exception("Fault cannot be fixed")
+                arr = safe_swap(arr, val, rows, cols)
 
             return arr
 
@@ -136,9 +158,11 @@ class CrossoverOperator:
 
 
         child1 = single_crossover(p1, p2)
-        child1 = fix_fault(child1)
+        child1 = fix_class_boundary_fault(child1)
+        child1 = fix_multiple_subject_session_fault(child1)
 
         child2 = single_crossover(p2, p1)
-        child2 = fix_fault(child2)
+        child2 = fix_class_boundary_fault(child2)
+        child2 = fix_multiple_subject_session_fault(child2)
 
         return [child1, child2]
