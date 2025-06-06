@@ -1,0 +1,1 @@
+SLOTS_PER_DAY = 10
