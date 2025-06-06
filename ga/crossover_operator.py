@@ -2,6 +2,7 @@ import numpy as np
 from collections import Counter
 from typing import List
 from utils.helper import locate_value, locate_twin, safe_swap
+from utils import io
 
 class CrossoverOperator:
     def __init__(self, method: str = "fixed_slice"):
@@ -144,9 +145,19 @@ class CrossoverOperator:
             p2_iter = iter(p2)
             modified = 0
             pointer = start_idx
+            gene_counter = 0
 
             while modified < half_len:
-                gene = next(p2_iter)
+                try:
+                    gene = next(p2_iter)
+                    gene_counter += 1
+                except:
+                    io.export_to_txt(np.array(p1).reshape((T, R), order='F'), "debug", f"p1.txt")
+                    io.export_to_txt(np.array(p2).reshape((T, R), order='F'), "debug", f"p2.txt")
+                    io.export_to_txt(np.array(child).reshape((T, R), order='F'), "debug", f"child.txt")
+                    print("gene_counter:", gene_counter)
+                    print("pointer:", pointer)
+                    raise Exception("p2_iter exhausted before child is filled.")
 
                 if child_counter[gene] < original_counter[gene]:
                     child[pointer] = gene

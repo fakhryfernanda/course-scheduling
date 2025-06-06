@@ -7,6 +7,7 @@ from ga.crossover_operator import CrossoverOperator
 from ga.select_parent import SelectParent
 from dataframes.curriculum import Curriculum
 from utils import io
+from utils.helper import are_identical
 
 @dataclass
 class ProblemContext:
@@ -72,7 +73,7 @@ class GeneticAlgorithm:
         for i in range(0, len(parents), 2):
             p1 = parents[i]
             p2 = parents[i + 1]
-            if random.random() < self.crossover_rate:
+            if random.random() < self.crossover_rate and not are_identical(p1.chromosome, p2.chromosome):
                 children_chromosomes = self.crossover(p1.chromosome, p2.chromosome)
                 next_population.extend([Genome(chromosome) for chromosome in children_chromosomes])
             else:
@@ -93,4 +94,5 @@ class GeneticAlgorithm:
         for gen in range(self.max_generation):
             print(f"Generation {gen+1}")
             self.evolve()
+            self.export_population()
             print(self.eval(), end="\n\n")

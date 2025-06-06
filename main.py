@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     context = ProblemContext(
         curriculum=curriculum,
-        time_slot_indices=list(range(30)),
+        time_slot_indices=list(range(40)),
         room_indices=list(range(24))
     )
 
