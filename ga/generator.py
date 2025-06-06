@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List
+from globals import SLOTS_PER_DAY
 from dataframes.curriculum import Curriculum
 
 def generate_valid_guess(curriculum: Curriculum, time_slot_indices: List, room_indices: List):
@@ -135,14 +136,13 @@ def get_used_slots(arr_2d):
         if arr_2d[t, r] != 0
     }
 
-def get_subject_days(arr_2d: np.ndarray, subject_id: int, slots_per_day: int = 10) -> set:
+def get_subject_days(arr_2d: np.ndarray, subject_id: int) -> set:
     """
     Determine on which days a given subject (group_id) appears in the schedule.
 
     Parameters:
     - arr_2d (np.ndarray): Schedule array of shape (T, R)
     - subject_id (int): The group ID to check (encoded in the hundreds digit of arr_2d values)
-    - slots_per_day (int): Number of time slots per day (default is 10)
 
     Returns:
     - set: A set of integers representing the day indices on which the subject appears
@@ -152,6 +152,6 @@ def get_subject_days(arr_2d: np.ndarray, subject_id: int, slots_per_day: int = 1
         for r in range(arr_2d.shape[1]):
             val = arr_2d[t, r]
             if val != 0 and val // 100 == subject_id:
-                day = t // slots_per_day
+                day = t // SLOTS_PER_DAY
                 subject_days.add(day)
     return subject_days
