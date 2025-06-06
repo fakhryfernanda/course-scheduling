@@ -1,168 +1,127 @@
 import numpy as np
+from globals import *
 from collections import Counter
 from typing import List
 from utils.helper import locate_value, locate_twin, safe_swap
 
 class CrossoverOperator:
-    def __init__(self, method: str = "fixed_slice"):
-        self.method = method
+    def __init__(self, random_column_start: bool = False):
+        self.random_column_start = random_column_start
 
-    def run(self, parents: List[np.ndarray]) -> List[np.ndarray]:
-        assert len(parents) == 2, "Only 2-parent crossover is supported."
-        parent1, parent2 = parents
+    def run(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:    
+        child1 = self.single_crossover(parent1, parent2)
+        child1 = self.fix_class_boundary_fault(child1)
+        child1 = self.fix_multiple_subject_session_fault(child1)
 
-        if self.method == "fixed_slice":
-            return [self._fixed_slice(parent1, parent2)]
-        elif self.method == "random_slice":
-            return self._random_slice(parent1, parent2)
+        child2 = self.single_crossover(parent2, parent1)
+        child2 = self.fix_class_boundary_fault(child2)
+        child2 = self.fix_multiple_subject_session_fault(child2)
+
+        return [child1, child2]
+        
+    def single_crossover(self, p1: np.ndarray, p2: np.ndarray):
+        T, R = p1.shape
+        if self.random_column_start:
+            start_col = np.random.choice(R // 2 + 1)
         else:
-            raise ValueError(f"Unsupported crossover method: {self.method}")
+            start_col = R // 2
 
-    def _fixed_slice(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
-        shape = parent1.shape
-        parent1 = parent1.flatten(order='F')
-        parent2 = parent2.flatten(order='F')
+        p1 = p1.flatten(order='F')
+        p2 = p2.flatten(order='F')
 
-        half = len(parent1) // 2
-        child = list(parent1[:half])
+        start_index = start_col * T
 
-        target_counts = Counter(parent1)
-        current_counts = Counter(child)
+        half_len = (T * R) // 2
+        replace_indices = list(range(start_index, start_index + half_len))
 
-        n_zeros = target_counts[0]
-        zeros_in_child = current_counts[0]
+        child = list(p1)
+        original_counter = Counter(child)
+        child_counter = Counter(child)
 
-        for gene in parent2:
-            if gene == 0:
-                if zeros_in_child < n_zeros:
-                    child.append(0)
-                    zeros_in_child += 1
-                continue
+        existed_zeros = sum(1 for i in range(start_index) if p1[i] == 0)
+        met_zeros = 0
 
-            if current_counts[gene] < target_counts[gene]:
-                child.append(gene)
-                current_counts[gene] += 1
+        for idx in replace_indices:
+            child_counter[child[idx]] -= 1
 
-            if len(child) == len(parent1):
-                break
+        p2_iter = iter(p2)
+        modified = 0
+        pointer = start_index
 
-        while len(child) < len(parent1):
-            child.append(0)
+        while modified < half_len:
+            try:
+                gene = next(p2_iter)
+            except:
+                raise Exception("p2_iter exhausted before child is filled.")
 
-        return np.array(child).reshape(shape, order='F')
+            if child_counter[gene] < original_counter[gene]:
+                if gene == 0 and met_zeros < existed_zeros:
+                    met_zeros += 1
+                    continue
 
-    def _random_slice(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
-        T, R = parent1.shape
-        total_len = T * R
-        half_len = total_len // 2
+                child[pointer] = gene
+                child_counter[gene] += 1
+                modified += 1
+                pointer += 1
 
-        p1 = parent1.flatten(order='F')
-        p2 = parent2.flatten(order='F')
+        return np.array(child).reshape((T, R), order='F')
+    
+    def fix_class_boundary_fault(self, arr: np.ndarray):
+        T, R = arr.shape
+        fault = []
 
-        start_col = np.random.choice(R // 2)
-        start_idx = start_col * T
-        replace_indices = list(range(start_idx, start_idx + half_len))
+        for t in range(SLOTS_PER_DAY - 1, T, SLOTS_PER_DAY):
+            for r in range(R):
+                val = arr[t, r]
+                if val == 0:
+                    continue
+                if t + 1 < T and arr[t + 1, r] == val:
+                    fault.append(int(val))
 
-        def check_class_boundary_fault(arr: np.ndarray, slots_per_day: int = 10) -> List[int]:
-            T, R = arr.shape
-            fault = []
+        if fault is None:
+            return arr
+                    
+        for val in fault:
+            (t,r) = locate_value(arr, val)
 
-            for t in range(slots_per_day - 1, T, slots_per_day):
+            rows = list(range(T-1))
+            cols = list(range(R))
+            start = cols.index(r)
+            cols = cols[start:] + cols[:start]
+            
+            arr = safe_swap(arr, val, rows, cols)
+
+        return arr
+        
+    def fix_multiple_subject_session_fault(self, arr: np.ndarray):
+        T, R = arr.shape
+        num_days = T // SLOTS_PER_DAY
+
+        fault = []
+        for day in range(num_days):
+            start = day * SLOTS_PER_DAY
+            end = start + SLOTS_PER_DAY
+            for t in range(start, end):
+                seen_keys = set()
                 for r in range(R):
                     val = arr[t, r]
                     if val == 0:
                         continue
-                    if t + 1 < T and arr[t + 1, r] == val:
-                        fault.append(val)
-
-            return [int(f) for f in fault]
-
-        def fix_class_boundary_fault(arr: np.ndarray):
-            fault = check_class_boundary_fault(arr)
-            if fault is None:
-                return arr
-                        
-            T,R = arr.shape
-            for val in fault:
-                (t,r) = locate_value(arr, val)
-
-
-                cols = list(range(R))
-                start = cols.index(r)
-                cols = cols[start:] + cols[:start]
-                
-                arr = safe_swap(arr, val, list(range(T-1)), cols)
-
-            return arr
-
-        def check_multiple_subject_session_fault(arr: np.ndarray, slots_per_day: int = 10):
-            T, R = arr.shape
-            num_days = T // slots_per_day
-
-            fault = []
-            for day in range(num_days):
-                start = day * slots_per_day
-                end = start + slots_per_day
-                for t in range(start, end):
-                    seen_keys = set()
-                    for r in range(R):
-                        val = arr[t, r]
-                        if val == 0:
-                            continue
-                        subject_id = int(val) // 100
-                        class_number = (int(val) // 10) % 10
-                        key = (subject_id, class_number)
-                        if key in seen_keys:
-                            fault.append(int(val))
-                        seen_keys.add(key)
-            
-            return fault
+                    subject_id = int(val) // 100
+                    class_number = (int(val) // 10) % 10
+                    key = (subject_id, class_number)
+                    if key in seen_keys:
+                        fault.append(int(val))
+                    seen_keys.add(key)
         
-        def fix_multiple_subject_session_fault(arr: np.ndarray):
-            fault = check_multiple_subject_session_fault(arr)
-            if fault is None:
-                return arr
-                                    
-            T, R = arr.shape
-            for val in fault:
-                (t,r) = locate_twin(arr, val)
-                rows = [i for i in range(T) if i // 10 != t // 10]
-                cols = list(range(R))
-
-                arr = safe_swap(arr, val, rows, cols)
-
+        if fault is None:
             return arr
+                                
+        for val in fault:
+            (t,r) = locate_twin(arr, val)
+            rows = [i for i in range(T) if i // 10 != t // 10]
+            cols = list(range(R))
 
-        def single_crossover(p1, p2):
-            child = list(p1)
-            original_counter = Counter(child)
-            child_counter = Counter(child)
+            arr = safe_swap(arr, val, rows, cols)
 
-            for idx in replace_indices:
-                child_counter[child[idx]] -= 1
-
-            p2_iter = iter(p2)
-            modified = 0
-            pointer = start_idx
-
-            while modified < half_len:
-                gene = next(p2_iter)
-
-                if child_counter[gene] < original_counter[gene]:
-                    child[pointer] = gene
-                    child_counter[gene] += 1
-                    modified += 1
-                    pointer += 1
-
-            return np.array(child).reshape((T, R), order='F')
-
-
-        child1 = single_crossover(p1, p2)
-        child1 = fix_class_boundary_fault(child1)
-        child1 = fix_multiple_subject_session_fault(child1)
-
-        child2 = single_crossover(p2, p1)
-        child2 = fix_class_boundary_fault(child2)
-        child2 = fix_multiple_subject_session_fault(child2)
-
-        return [child1, child2]
+        return arr
