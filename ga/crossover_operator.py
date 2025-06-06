@@ -1,23 +1,20 @@
 import numpy as np
+import logging
+from utils import logger
 from globals import *
 from collections import Counter
-from typing import List
 from utils.helper import locate_value, locate_twin, safe_swap
 
 class CrossoverOperator:
     def __init__(self, random_column_start: bool = False):
         self.random_column_start = random_column_start
 
-    def run(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:    
-        child1 = self.single_crossover(parent1, parent2)
-        child1 = self.fix_class_boundary_fault(child1)
-        child1 = self.fix_multiple_subject_session_fault(child1)
+    def run(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
+        child = self.single_crossover(parent1, parent2)
+        child = self.fix_class_boundary_fault(child)
+        child = self.fix_multiple_subject_session_fault(child)
 
-        child2 = self.single_crossover(parent2, parent1)
-        child2 = self.fix_class_boundary_fault(child2)
-        child2 = self.fix_multiple_subject_session_fault(child2)
-
-        return [child1, child2]
+        return child
         
     def single_crossover(self, p1: np.ndarray, p2: np.ndarray):
         T, R = p1.shape
@@ -25,6 +22,7 @@ class CrossoverOperator:
             start_col = np.random.choice(R // 2 + 1)
         else:
             start_col = R // 2
+        logging.info(f"Crossover with starting column: {start_col}")
 
         p1 = p1.flatten(order='F')
         p2 = p2.flatten(order='F')
