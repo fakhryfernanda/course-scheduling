@@ -9,6 +9,8 @@ class SelectParent:
     def run(self, population: List[Genome]) -> List[Genome]:
         if self.method == "tournament":
             return self._tournament_selection(population)
+        elif self.method == "no_selection":
+            return population
         else:
             raise ValueError(f"Selection method '{self.method}' is not supported.")
 
