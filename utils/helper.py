@@ -1,5 +1,6 @@
 import numpy as np
 from utils import io
+from globals import SLOTS_PER_DAY
 from collections import Counter
 
 def locate_value(arr: np.ndarray, value: int) -> tuple[int, int]:
@@ -16,37 +17,45 @@ def get_two_hour_pair(arr, val):
     T, R = arr.shape
     t, r = locate_value(arr, val)
 
-    if t > 0 and arr[t - 1, r] == val:
-        return (t - 1, r)
-    elif t < T - 1 and arr[t + 1, r] == val:
-        return (t + 1, r)
-    return None
+    arr2 = arr.copy()
+    arr2[t, r] = 0
+
+    return locate_value(arr2, val)
 
 def safe_swap(arr, val, possible_rows, possible_cols):
-    T, R = arr.shape
-    rows = possible_rows
-    cols = possible_cols
-    (t,r) = locate_value(arr, val)
+    try:
+        T, R = arr.shape
+        rows = possible_rows
+        cols = possible_cols
+        t, r = locate_value(arr, val)
 
-    is_two_hour = Counter(arr.flatten(order='F'))[val] == 2
-    if is_two_hour:
-        pair_location = get_two_hour_pair(arr, val)
+        is_two_hour = Counter(arr.flatten())[val] == 2
+        pair_location = get_two_hour_pair(arr, val) if is_two_hour else None
 
-    safe = False
-    element_checked = 0
-    for col in cols:
-        for row in rows:
-            element_checked += 1
-            if row % 10 == 9:
-                continue
-  
-            if row < T - 1 and arr[row, col] == 0:
+        safe = False
+        for col in cols:
+            for row in rows:
+                if (row + 1) % SLOTS_PER_DAY == 0:
+                    continue
+
+                if arr[row, col] != 0:
+                    continue
+            
                 if is_two_hour:
-                    if arr[pair_location[0], col] == 0:
+                    t_pair, r_pair = pair_location
+                    diff = t_pair - t
+                    if diff == T - 1:
+                        diff = -1
+
+                    if diff == -1 and row == 0:
+                        continue
+
+                    if arr[row + diff, col] == 0:
                         arr[row, col] = val
-                        arr[row + 1, col] = val
+                        arr[row + diff, col] = val
+
                         arr[t, r] = 0
-                        arr[t + 1, r] = 0
+                        arr[t_pair, r] = 0
                         safe = True
                         break
                 else:
@@ -55,8 +64,14 @@ def safe_swap(arr, val, possible_rows, possible_cols):
                     safe = True
                     break
 
-        if safe:
-            break
+            if safe:
+                break
+
+    except:
+        io.export_to_txt(arr, "debug", f"fault.txt")
+        print("val:", val)
+        print("diff:", diff)
+        raise Exception("Safe swap error")
 
     if not safe:
         print("rows:", rows)

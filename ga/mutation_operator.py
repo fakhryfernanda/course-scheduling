@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from globals import SLOTS_PER_DAY
 from utils.helper import locate_twin
 
 class MutationOperator:
@@ -12,7 +13,7 @@ class MutationOperator:
         else:
             raise ValueError(f"Unsupported mutation method: {self.method}")
         
-    def random_swap(self, chromosome, attempts: int = 5, slots_per_day: int = 10) -> None:
+    def random_swap(self, chromosome, attempts: int = 5) -> None:
         T, R = chromosome.shape
         mutated = chromosome.copy()
 
@@ -34,7 +35,7 @@ class MutationOperator:
                 return False
 
             (t2, r2) = twin_location
-            return t1 // slots_per_day == t2 // slots_per_day
+            return t1 // SLOTS_PER_DAY == t2 // SLOTS_PER_DAY
                 
         valid_2h_time_indices = [t for t in range(T - 1) if (t % 10) <= 8]
         count = 0

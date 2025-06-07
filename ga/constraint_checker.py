@@ -1,14 +1,14 @@
 import numpy as np
+from globals import SLOTS_PER_DAY
 
 class ConstraintChecker:
-    def __init__(self, chromosome: np.ndarray, slots_per_day: int = 10, verbose: bool = False):
+    def __init__(self, chromosome: np.ndarray, verbose: bool = False):
         self.chromosome = chromosome
-        self.slots_per_day = slots_per_day
         self.verbose = verbose
 
     def check_class_boundary(self) -> bool:
         T, R = self.chromosome.shape
-        for t in range(self.slots_per_day - 1, T, self.slots_per_day):
+        for t in range(SLOTS_PER_DAY - 1, T, SLOTS_PER_DAY):
             for r in range(R):
                 val = self.chromosome[t, r]
                 if val == 0:
@@ -21,10 +21,10 @@ class ConstraintChecker:
 
     def check_subject_session_per_day(self) -> bool:
         T, R = self.chromosome.shape
-        num_days = T // self.slots_per_day
+        num_days = T // SLOTS_PER_DAY
         for day in range(num_days):
-            start = day * self.slots_per_day
-            end = start + self.slots_per_day
+            start = day * SLOTS_PER_DAY
+            end = start + SLOTS_PER_DAY
             for t in range(start, end):
                 seen_keys = set()
                 for r in range(R):
