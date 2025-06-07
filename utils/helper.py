@@ -35,17 +35,17 @@ def safe_swap(arr, val, possible_rows, possible_cols):
         safe = False
         for col in cols:
             for row in rows:
-                if (row + 1) % SLOTS_PER_DAY == 0:
+                if arr[row, col] != 0:
                     continue
 
-                if arr[row, col] != 0:
+                if is_two_hour and (row + 1) % SLOTS_PER_DAY == 0:
                     continue
             
                 if is_two_hour:
                     t_pair, r_pair = pair_location
-                    diff = t_pair - t
+                    diff = abs(t_pair - t)
                     if diff == T - 1:
-                        diff = -1
+                        diff = 1
 
                     if diff == -1 and row == 0:
                         continue
@@ -55,7 +55,7 @@ def safe_swap(arr, val, possible_rows, possible_cols):
                         arr[row + diff, col] = val
 
                         arr[t, r] = 0
-                        arr[t_pair, r] = 0
+                        arr[t_pair, r_pair] = 0
                         safe = True
                         break
                 else:
@@ -67,11 +67,10 @@ def safe_swap(arr, val, possible_rows, possible_cols):
             if safe:
                 break
 
-    except:
+    except Exception as e:
         io.export_to_txt(arr, "debug", f"fault.txt")
-        print("val:", val)
-        print("diff:", diff)
-        raise Exception("Safe swap error")
+        print("Safe swap errors:", e)
+        raise
 
     if not safe:
         raise Exception("Fault cannot be fixed")
