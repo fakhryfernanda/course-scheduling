@@ -1,5 +1,8 @@
 import random
 import numpy as np
+import logging
+from logger.evaluation import logger
+from datetime import datetime
 from globals import *
 from dataclasses import dataclass
 from typing import List
@@ -55,6 +58,10 @@ class GeneticAlgorithm:
             for genome in self.population
         ]
     
+    def log_evaluation(self, gen: int):
+        logger.info(f"Generation: {gen}")
+        logger.info(f"{self.eval()}\n")
+    
     def select(self) -> List[Genome]:
         return SelectParent(method=SELECTION_METHOD).run(self.population)
 
@@ -86,12 +93,13 @@ class GeneticAlgorithm:
 
     def run(self) -> None:
         self.initialize_population()
-        print("Generation 0")
         self.export_population()
-        print(self.eval(), end="\n\n")
+        if LOG_EVALUATION:
+            logger.info(f"{datetime.now()}\n")
+            self.log_evaluation(gen=0)
 
         for gen in range(self.max_generation):
-            print(f"Generation {gen+1}")
             self.evolve()
             self.export_population()
-            print(self.eval(), end="\n\n")
+            if LOG_EVALUATION:
+                self.log_evaluation(gen=gen+1)

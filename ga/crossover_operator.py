@@ -1,10 +1,7 @@
 import numpy as np
-import logging
-from utils import logger
 from globals import *
 from collections import Counter
 from utils.helper import locate_value, locate_twin, safe_swap
-from utils import io
 
 class CrossoverOperator:
     def __init__(self, random_column_start: bool = False):
@@ -23,7 +20,6 @@ class CrossoverOperator:
             start_col = np.random.choice(R // 2 + 1)
         else:
             start_col = R // 2
-        logging.info(f"Crossover with starting column: {start_col}")
 
         p1 = p1.flatten(order='F')
         p2 = p2.flatten(order='F')
