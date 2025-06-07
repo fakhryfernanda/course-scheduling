@@ -57,8 +57,8 @@ class GeneticAlgorithm:
         return SelectParent(method="tournament").run(self.population)
 
     def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
-        crossover_operator = CrossoverOperator(method="random_slice")
-        return crossover_operator.run([parent1, parent2])
+        crossover_operator = CrossoverOperator()
+        return crossover_operator.run(parent1, parent2)
 
     def mutate(self):
         pass
@@ -74,8 +74,10 @@ class GeneticAlgorithm:
             p1 = parents[i]
             p2 = parents[i + 1]
             if random.random() < self.crossover_rate and not are_identical(p1.chromosome, p2.chromosome):
-                children_chromosomes = self.crossover(p1.chromosome, p2.chromosome)
-                next_population.extend([Genome(chromosome) for chromosome in children_chromosomes])
+                child1 = self.crossover(p1.chromosome, p2.chromosome)
+                child2 = self.crossover(p2.chromosome, p1.chromosome)
+                next_population.extend(Genome(child1))
+                next_population.extend(Genome(child2))
             else:
                 next_population.extend([Genome(p1.chromosome), Genome(p2.chromosome)])
 
