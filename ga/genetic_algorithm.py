@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from globals import *
 from dataclasses import dataclass
 from typing import List
 from ga.genome import Genome
@@ -26,6 +27,7 @@ class GeneticAlgorithm:
         self.mutation_rate = mutation_rate
 
         self.population: List[Genome] = []
+        self.generation = 0
 
     def initialize_population(self):
         self.population = [
@@ -39,7 +41,7 @@ class GeneticAlgorithm:
 
     def export_population(self):
         for i, genome in enumerate(self.population):
-            io.export_to_txt(genome.chromosome, "solutions", f"solution_{i+1}.txt")
+            io.export_to_txt(genome.chromosome, f"population/gen_{self.generation}", f"p_{i+1}.txt")
 
     def eval(self):
         return [
@@ -54,16 +56,12 @@ class GeneticAlgorithm:
         ]
     
     def select(self) -> List[Genome]:
-        return SelectParent(method="tournament").run(self.population)
+        return SelectParent(method=SELECTION_METHOD).run(self.population)
 
-    def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> List[np.ndarray]:
-        crossover_operator = CrossoverOperator()
-        return crossover_operator.run(parent1, parent2)
+    def crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
+        return CrossoverOperator(random_column_start=RANDOMIZE_CROSSOVER).run(parent1, parent2)
 
-    def mutate(self):
-        pass
-
-    def evolve(self):
+    def evolve(self) -> None:
         next_population = []
 
         # Selection
@@ -76,21 +74,20 @@ class GeneticAlgorithm:
             if random.random() < self.crossover_rate and not are_identical(p1.chromosome, p2.chromosome):
                 child1 = self.crossover(p1.chromosome, p2.chromosome)
                 child2 = self.crossover(p2.chromosome, p1.chromosome)
-                next_population.extend(Genome(child1))
-                next_population.extend(Genome(child2))
+                next_population.append(Genome(child1))
+                next_population.append(Genome(child2))
             else:
                 next_population.extend([Genome(p1.chromosome), Genome(p2.chromosome)])
 
-        # Mutation
-        for genome in next_population:
-            if random.random() < self.mutation_rate:
-                genome.mutate()
+        # No mutation
 
         self.population = next_population
+        self.generation += 1
 
-    def run(self):
+    def run(self) -> None:
         self.initialize_population()
         print("Generation 0")
+        self.export_population()
         print(self.eval(), end="\n\n")
 
         for gen in range(self.max_generation):

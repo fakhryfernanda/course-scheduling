@@ -3,7 +3,7 @@ import ast
 import numpy as np
 from collections import Counter
 
-def export_to_txt(arr, folder="solutions", filename="solution.txt", with_counter=True):
+def export_to_txt(arr, folder="solutions", filename="solution.txt", with_counter=False):
     # Ensure the folder exists
     os.makedirs(folder, exist_ok=True)
 
