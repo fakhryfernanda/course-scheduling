@@ -74,11 +74,6 @@ def safe_swap(arr, val, possible_rows, possible_cols):
         raise Exception("Safe swap error")
 
     if not safe:
-        print("rows:", rows)
-        print("cols:", cols)
-        print("element_checked:", element_checked)
-        print("fault:", val)
-        io.export_to_txt(arr, "debug", "fault.txt")
         raise Exception("Fault cannot be fixed")
     
     return arr
